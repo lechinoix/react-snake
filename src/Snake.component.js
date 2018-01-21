@@ -38,19 +38,20 @@ class Snake extends Component {
   }
 
   setNewFruit = () => {
-    let newFruit = {
-      x: Math.round(Math.random() * (this.props.grid - 1)),
-      y: Math.round(Math.random() * (this.props.grid - 1)),
-    };
-    while (!this.checkCellIsEmpty(newFruit) &&
-      this.isSameCell(newFruit, this.state.fruit)) {
-      newFruit = {
-        x: Math.round(Math.random() * (this.props.grid - 1)),
-        y: Math.round(Math.random() * (this.props.grid - 1)),
-      };
+    let newFruit = this.chooseRandomCell();
+    while (
+      !this.checkCellIsEmpty(newFruit) ||
+      this.isSameCell(newFruit, this.state.fruit)
+    ) {
+      newFruit = this.chooseRandomCell();
     }
     return newFruit;
   }
+
+  chooseRandomCell = () => ({
+    x: Math.round(Math.random() * (this.props.grid - 1)),
+    y: Math.round(Math.random() * (this.props.grid - 1)),
+  })
 
   createNewCell = () => {
     const newSnakeCell = Object.assign({}, this.state.snake[this.state.snake.length - 1]);
@@ -93,7 +94,10 @@ class Snake extends Component {
     window.setTimeout(this.goForward, this.props.frame);
   }
 
-  eatFruit = () => this.setState({ fruit: this.setNewFruit(), count: this.state.count + 1 });
+  eatFruit = () => this.setState({
+    fruit: this.setNewFruit(),
+    count: this.state.count + 1,
+  });
 
   isSameCell = (cell1, cell2) => (cell1.x === cell2.x && cell1.y === cell2.y)
 
@@ -141,7 +145,7 @@ class Snake extends Component {
   }
 
   renderSnakeCell = ({ x, y }, index) => (
-    <SnakeCell cell={this.props.cell} x={x} y={y} key={index} className="snake" />
+    <SnakeCell cell={this.props.cell} x={x} y={y} key={index} />
   )
 
   render() {
