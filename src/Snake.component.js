@@ -1,37 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { GameGrid, SnakeCell, Fruit, Counter } from './Snake.style';
 
-const GRID_SIZE = 12;
-const CELL_SIZE = 30;
-const FRAME_DURATION = 100;
-
 class Snake extends Component {
-  constructor(props) {
-    super(props);
-    this.state = this.initialState;
-  }
-
-  componentDidMount() {
-    this.updateGame();
-    window.addEventListener('keypress', this.changeNextMove);
-  }
-
-  setNewFruit = () => {
-    let newFruit = {
-      x: Math.round(Math.random() * (GRID_SIZE - 1)),
-      y: Math.round(Math.random() * (GRID_SIZE - 1)),
-    };
-    while (!this.checkCellIsEmpty(newFruit) &&
-      this.isSameCell(newFruit, this.state.fruit)) {
-      newFruit = {
-        x: Math.round(Math.random() * (GRID_SIZE - 1)),
-        y: Math.round(Math.random() * (GRID_SIZE - 1)),
-      };
-    }
-    return newFruit;
-  }
-
-  initialState = {
+  static initialState = {
     snake: [
       { x: 3, y: 1 },
       { x: 2, y: 1 },
@@ -43,6 +15,41 @@ class Snake extends Component {
     previousMove: 'down',
     gameOver: false,
     count: 0,
+  }
+
+  static defaultProps = {
+    grid: 12,
+    cell: 30,
+    frame: 100,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = Snake.initialState;
+  }
+
+  componentDidMount() {
+    this.goForward();
+    window.addEventListener('keypress', this.changeNextMove);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keypress', this.changeNextMove);
+  }
+
+  setNewFruit = () => {
+    let newFruit = {
+      x: Math.round(Math.random() * (this.props.grid - 1)),
+      y: Math.round(Math.random() * (this.props.grid - 1)),
+    };
+    while (!this.checkCellIsEmpty(newFruit) &&
+      this.isSameCell(newFruit, this.state.fruit)) {
+      newFruit = {
+        x: Math.round(Math.random() * (this.props.grid - 1)),
+        y: Math.round(Math.random() * (this.props.grid - 1)),
+      };
+    }
+    return newFruit;
   }
 
   createNewCell = () => {
@@ -65,7 +72,7 @@ class Snake extends Component {
     return newSnakeCell;
   }
 
-  updateGame = () => {
+  goForward = () => {
     const newSnakeCell = this.createNewCell();
 
     if (!this.isNextMoveValid(newSnakeCell)) {
@@ -73,20 +80,20 @@ class Snake extends Component {
       return;
     }
 
-    let snake;
-    if (newSnakeCell.x === this.state.fruit.x &&
-        newSnakeCell.y === this.state.fruit.y) {
-      snake = [...this.state.snake];
-      this.setState({ fruit: this.setNewFruit(), count: this.state.count + 1 });
+    const snake = [...this.state.snake];
+    if (this.isSameCell(newSnakeCell, this.state.fruit)) {
+      this.eatFruit();
     } else {
-      snake = this.state.snake.slice(1, this.state.snake.length);
+      snake.shift();
     }
 
     snake.push(newSnakeCell);
     this.setState({ snake, previousMove: this.state.nextMove });
 
-    window.setTimeout(this.updateGame, FRAME_DURATION);
+    window.setTimeout(this.goForward, this.props.frame);
   }
+
+  eatFruit = () => this.setState({ fruit: this.setNewFruit(), count: this.state.count + 1 });
 
   isSameCell = (cell1, cell2) => (cell1.x === cell2.x && cell1.y === cell2.y)
 
@@ -98,9 +105,9 @@ class Snake extends Component {
   isNextMoveValid = (nextCell) => (
     this.checkCellIsEmpty(nextCell)
       && nextCell.x >= 0
-      && nextCell.x < GRID_SIZE
+      && nextCell.x < this.props.grid
       && nextCell.y >= 0
-      && nextCell.y < GRID_SIZE
+      && nextCell.y < this.props.grid
   )
 
   changeNextMove = (e) => {
@@ -122,21 +129,25 @@ class Snake extends Component {
         this.setState({ nextMove: 'right' });
         break;
       case 'r':
-        this.setState(this.initialState);
-        this.updateGame();
+        this.restartGame();
         break;
       default:
     }
   }
 
+  restartGame = () => {
+    this.setState(Snake.initialState);
+    this.goForward();
+  }
+
   renderSnakeCell = ({ x, y }, index) => (
-    <SnakeCell cell={CELL_SIZE} x={x} y={y} key={index} className="snake" />
+    <SnakeCell cell={this.props.cell} x={x} y={y} key={index} className="snake" />
   )
 
   render() {
     return (
       <div>
-        <GameGrid grid={GRID_SIZE} cell={CELL_SIZE}>
+        <GameGrid grid={this.props.grid} cell={this.props.cell}>
           {
             this.state.gameOver &&
               <p className="game-over">
@@ -147,12 +158,18 @@ class Snake extends Component {
               </p>
           }
           {this.state.snake.map(this.renderSnakeCell)}
-          <Fruit cell={CELL_SIZE} position={this.state.fruit} />
+          <Fruit cell={this.props.cell} position={this.state.fruit} />
         </GameGrid>
         <Counter>You ate {this.state.count} fruits</Counter>
       </div>
     );
   }
 }
+
+Snake.propTypes = {
+  grid: PropTypes.number,
+  cell: PropTypes.number,
+  frame: PropTypes.number,
+};
 
 export default Snake;
