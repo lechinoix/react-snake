@@ -53,42 +53,42 @@ class Snake extends Component {
     y: Math.round(Math.random() * (this.props.grid - 1)),
   })
 
-  createNewCell = () => {
-    const newSnakeCell = Object.assign({}, this.state.snake[this.state.snake.length - 1]);
+  moveSnakeHead = () => {
+    const snakeHead = Object.assign({}, this.state.snake[this.state.snake.length - 1]);
     switch (this.state.nextMove) {
       case 'right':
-        newSnakeCell.x += 1;
+        snakeHead.x += 1;
         break;
       case 'left':
-        newSnakeCell.x -= 1;
+        snakeHead.x -= 1;
         break;
       case 'up':
-        newSnakeCell.y -= 1;
+        snakeHead.y -= 1;
         break;
       case 'down':
-        newSnakeCell.y += 1;
+        snakeHead.y += 1;
         break;
       default:
     }
-    return newSnakeCell;
+    return snakeHead;
   }
 
   goForward = () => {
-    const newSnakeCell = this.createNewCell();
+    const snakeHead = this.moveSnakeHead();
 
-    if (!this.isNextMoveValid(newSnakeCell)) {
+    if (!this.isNextMoveValid(snakeHead)) {
       this.setState({ gameOver: true });
       return;
     }
 
     const snake = [...this.state.snake];
-    if (this.isSameCell(newSnakeCell, this.state.fruit)) {
+    if (this.isSameCell(snakeHead, this.state.fruit)) {
       this.eatFruit();
     } else {
       snake.shift();
     }
 
-    snake.push(newSnakeCell);
+    snake.push(snakeHead);
     this.setState({ snake, previousMove: this.state.nextMove });
 
     window.setTimeout(this.goForward, this.props.frame);
