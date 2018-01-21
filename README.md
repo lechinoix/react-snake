@@ -1,6 +1,6 @@
 # Reac Snake
 
-A simple Snake Game component made with create-react-app.
+A simple Snake Game component made with create-react-app. [Try it !](https://lechinoix.github.io/react-snake/)
 
 ![Simple snake](./screenshot.png)
 

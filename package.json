@@ -2,6 +2,8 @@
   "name": "react-snake",
   "version": "0.1.0",
   "private": true,
+  "main": "lib.js",
+  "homepage": "https://lechinoix.github.io/react-snake",
   "dependencies": {
     "eslint": "^4.16.0",
     "eslint-config-airbnb": "^16.1.0",
@@ -12,6 +14,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
     "eventsource-polyfill": "^0.9.6",
+    "gh-pages": "^1.1.0",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -22,6 +25,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
