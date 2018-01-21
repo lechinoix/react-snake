@@ -1,61 +1,11 @@
-import styled from 'styled-components';
 import React, { Component } from 'react';
-import './App.css';
+import { GameGrid, SnakeCell, Fruit, Counter } from './Snake.style';
 
-export const GRID_SIZE = 12;
-export const CELL_SIZE = 30;
-export const FRAME_DURATION = 100;
+const GRID_SIZE = 12;
+const CELL_SIZE = 30;
+const FRAME_DURATION = 100;
 
-const GameGrid = styled.div`
-  position: relative;
-  width: ${GRID_SIZE * CELL_SIZE}px;
-  height: ${GRID_SIZE * CELL_SIZE}px;
-  border: 1px solid #999;
-  margin: 30px auto;
-
-  .game-over {
-    color: red;
-    position: absolute;
-    left: 0;
-    right: 0;
-    text-align: center;
-    z-index: 1;
-
-    .title {
-      font-size: 30px;
-      font-weight: bold;
-    }
-  }
-`;
-
-const SnakeCell = styled.div`
-  position: absolute;
-  left: ${({ x }) => `${x * CELL_SIZE}px;`}
-  top: ${({ y }) => `${y * CELL_SIZE}px;`}
-  background-color: #333;
-  width: ${CELL_SIZE}px;
-  height: ${CELL_SIZE}px;
-  z-index: 0;
-`;
-
-const Fruit = styled.div`
-  position: absolute;
-  left: ${({ position }) => `${position.x * CELL_SIZE}px;`}
-  top: ${({ position }) => `${position.y * CELL_SIZE}px;`}
-  background-color: red;
-  width: ${CELL_SIZE}px;
-  height: ${CELL_SIZE}px;
-  border-radius: 50%;
-  z-index: 0;
-`;
-
-const Counter = styled.p`
-  text-align: center;
-  left: 0;
-  right: 0;
-`;
-
-class App extends Component {
+class Snake extends Component {
   constructor(props) {
     super(props);
     this.state = this.initialState;
@@ -180,13 +130,13 @@ class App extends Component {
   }
 
   renderSnakeCell = ({ x, y }, index) => (
-    <SnakeCell x={x} y={y} key={index} className="snake" />
+    <SnakeCell cell={CELL_SIZE} x={x} y={y} key={index} className="snake" />
   )
 
   render() {
     return (
       <div>
-        <GameGrid>
+        <GameGrid grid={GRID_SIZE} cell={CELL_SIZE}>
           {
             this.state.gameOver &&
               <p className="game-over">
@@ -197,7 +147,7 @@ class App extends Component {
               </p>
           }
           {this.state.snake.map(this.renderSnakeCell)}
-          <Fruit position={this.state.fruit} />
+          <Fruit cell={CELL_SIZE} position={this.state.fruit} />
         </GameGrid>
         <Counter>You ate {this.state.count} fruits</Counter>
       </div>
@@ -205,4 +155,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Snake;
