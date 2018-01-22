@@ -1,7 +1,6 @@
 {
-  "name": "react-snake",
+  "name": "react-snake-component",
   "version": "0.1.0",
-  "private": true,
   "main": "lib.js",
   "homepage": "https://lechinoix.github.io/react-snake",
   "dependencies": {
@@ -19,6 +18,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.0",
+    "semantic-release": "^12.2.4",
     "styled-components": "^2.4.0"
   },
   "scripts": {
@@ -26,6 +26,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "semantic-release": "semantic-release",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   }
