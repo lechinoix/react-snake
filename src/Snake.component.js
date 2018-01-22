@@ -164,7 +164,24 @@ class Snake extends Component {
           {this.state.snake.map(this.renderSnakeCell)}
           <Fruit cell={this.props.cell} position={this.state.fruit} />
         </GameGrid>
-        <Counter>You ate {this.state.count} fruits</Counter>
+        <Counter>
+          You ate {this.state.count} fruits
+          <br />
+          <br />
+          Commands
+          <br />
+          <br />
+          A : left
+          <br />
+          S : down
+          <br />
+          D : right
+          <br />
+          W : up
+          <br />
+          R : restart
+        </Counter>
+
       </div>
     );
   }
