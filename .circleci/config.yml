@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:7.10
+      - image: circleci/node:8.4.0
 
     working_directory: ~/repo
 
@@ -17,11 +17,11 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           - v1-dependencies-
       - run:
-        name: install
-        command: yarn install
+          name: install
+          command: yarn install
       - run:
-        name: release
-        command: npm run semantic-release || true
+          name: release
+          command: npm run semantic-release || true
       - save_cache:
           paths:
             - node_modules
